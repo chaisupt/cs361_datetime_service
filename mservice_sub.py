@@ -15,7 +15,7 @@ import os
 import time
 import sys
 import select
-import keyboard
+
 
 def curr_time_service() :
     # get current longitude latitude
