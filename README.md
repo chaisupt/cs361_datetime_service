@@ -33,4 +33,4 @@ step2 : run your code that can trigger mservice.py to deliver the data (such as 
 
 step2.1 : to meet the autorun condition your code need to overwrite the commandfile(command_dtz.txt) by write "req" on the firstline and save it (sometimes need flush() to make it save at that time)
 
-step3 : receive the data at result file(dtz_res.csv) the data will be in the second line (the first line is data label)
+step3 : please wait around 4 seconds by using sleep() as sample file and receive the data at result file(dtz_res.csv) the data will be in the second line (the first line is data label)
