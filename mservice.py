@@ -15,6 +15,8 @@ import os
 import time
 import sys
 import select
+from urllib.request import urlopen
+from datetime import timedelta
 
 def curr_time_service() :
     # get current longitude latitude
@@ -29,14 +31,62 @@ def curr_time_service() :
     timezone_str = t_tz.tzNameAt(the_set[0], the_set[1]) # Seville coordinates
     #set the timezone into appropriate format
     timezone = pytz.timezone(timezone_str)
-    #show the timezone
+
+    #show the timezone by datetime
     # print(datetime.now(timezone))
-    dict_result={}
-    dict_result['date']=str(datetime.now(timezone).date())
-    dump=str(datetime.now(timezone).time())
-    dict_result['time']=dump[:8]
-    dict_result['timezone']=str(datetime.now(timezone).tzname())
+    # dict_result={}
+    # dict_result['date']=str(datetime.now(timezone).date())
+    # dump=str(datetime.now(timezone).time())
+    # dict_result['time']=dump[:8]
+    # dict_result['timezone']=str(datetime.now(timezone).tzname())
     # print(dict_result)
+
+    #show time by internet url
+    res = urlopen('http://just-the-time.appspot.com/')
+    result = res.read().strip()
+    time_str = result.decode('utf-8') #2017-07-28 04:53:46
+    timezoneint=str(datetime.now(timezone).tzname())
+    timezoneint=int(timezoneint)
+    ye=time_str[:4]
+    ye=int(ye)
+    mt=time_str[5:]
+    mt=mt[:2]
+    mt=int(mt)
+    dy=time_str[8:]
+    dy=dy[:2]
+    dy=int(dy)
+    hrs=time_str[11:]
+    hrs=hrs[:2]
+    hrs=int(hrs)
+    mins=time_str[14:]
+    mins=mins[:2]
+    mins=int(mins)
+    secs=time_str[17:]
+    secs=secs[:2]
+    secs=int(secs)
+    current_time=datetime(ye,mt,dy,hrs,mins,secs)
+    negat=False
+    dif_min=0
+    if(timezoneint<0):
+        negat=True
+        timezoneint=timezoneint*(-1)
+    if(timezoneint%100==30 or timezoneint%100==45):
+        dif_min=timezoneint%100
+        timezoneint=timezoneint/100
+    if negat is True:
+        current_time=current_time-timedelta(hours=timezoneint)    
+        if dif_min != 0:
+            current_time=current_time-timedelta(minutes=dif_min)
+    else :
+        current_time=current_time+timedelta(hours=timezoneint)
+        if dif_min != 0:
+            current_time=current_time+timedelta(minutes=dif_min)
+
+    dict_result={}
+    dict_result['date']=str(current_time.date())
+    dict_result['time']=str(current_time.time())
+    dict_result['timezone']=str(datetime.now(timezone).tzname())     
+
     return dict_result
 
 def doit():
