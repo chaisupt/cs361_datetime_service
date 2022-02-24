@@ -28,10 +28,18 @@ def curr_time_service() :
     # global tzwhere
     t_tz= tzwhere.tzwhere()
     #find the timezone from current latitude / longitude
-    timezone_str = t_tz.tzNameAt(the_set[0], the_set[1]) # Seville coordinates
+    # timezone_str = t_tz.tzNameAt(the_set[0], the_set[1]) # Seville coordinates
+    timezone_str = t_tz.tzNameAt(44.566922, -123.304536) # Seville coordinates
     #set the timezone into appropriate format
     timezone = pytz.timezone(timezone_str)
-
+    print(timezone)
+    # print("here there is ........................")
+    mydt = timezone.localize(datetime.now())
+    # print(mydt)
+    mydt=str(mydt)
+    # print(mydt[-6:])
+    timezoneint=int(mydt[:3])
+    dif_min=int(mydt[-2:])
     #show the timezone by datetime
     # print(datetime.now(timezone))
     # dict_result={}
@@ -45,8 +53,6 @@ def curr_time_service() :
     res = urlopen('http://just-the-time.appspot.com/')
     result = res.read().strip()
     time_str = result.decode('utf-8') #2017-07-28 04:53:46
-    timezoneint=str(datetime.now(timezone).tzname())
-    timezoneint=int(timezoneint)
     ye=time_str[:4]
     ye=int(ye)
     mt=time_str[5:]
@@ -66,13 +72,9 @@ def curr_time_service() :
     secs=int(secs)
     current_time=datetime(ye,mt,dy,hrs,mins,secs)
     negat=False
-    dif_min=0
     if(timezoneint<0):
         negat=True
         timezoneint=timezoneint*(-1)
-    if(timezoneint%100==30 or timezoneint%100==45):
-        dif_min=timezoneint%100
-        timezoneint=timezoneint/100
     if negat is True:
         current_time=current_time-timedelta(hours=timezoneint)    
         if dif_min != 0:
