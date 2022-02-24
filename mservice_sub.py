@@ -70,5 +70,5 @@ while True:
     try:
         check_commandfile()
     except KeyboardInterrupt:
-        print("\nthe service was closed thank you for using time service")
+        print(" \nthe service was closed thank you for using time service")
         break
